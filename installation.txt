@@ -1,0 +1,5 @@
+
+# Install rust with this command, just (1) for default installation
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# install this comand (default) for gtk4 deps
+sudo pacman -S gtk4 base-devel
