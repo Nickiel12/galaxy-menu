@@ -1,5 +1,5 @@
 [package]
-name = "RustGTK4"
+name = "galaxy-menu"
 version = "0.1.0"
 edition = "2021"
 
