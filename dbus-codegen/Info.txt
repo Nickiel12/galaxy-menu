@@ -1,0 +1,6 @@
+https://github.com/diwic/dbus-rs/blob/master/dbus/examples/argument_guide.md
+https://github.com/diwic/dbus-rs/tree/master/dbus-codegen
+
+install `cargo install dbus-codegen`
+
+https://github.com/JingOS-team/kwin/blob/master/org.kde.KWin.xml
