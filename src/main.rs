@@ -2,11 +2,15 @@ use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Button};
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
+//https://develop.kde.org/docs/use/d-bus/introduction_to_dbus/
+//https://www.reddit.com/r/kde/comments/8h92z0/command_line_command_to_switch_virtual_desktop/
+//https://forum.kde.org/viewtopic.php?t=107875
+//https://docs.rs/dbus/latest/dbus/
 
 fn main() {
     // Create a new application
     let app = Application::builder()
-        .application_id("org.gtk-rs.example")
+        .application_id("org.galaxymenu.constellation")
         .build();
 
     // Connect to "activate" signal of `app`
