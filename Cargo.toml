@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 gtk = { version = "0.4.7", package = "gtk4" }
+dbus = "0.9.5"

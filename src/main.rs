@@ -29,7 +29,7 @@ fn build_ui(app: &Application) {
     // Connect to "clicked" signal of `button`
     button.connect_clicked(move |button| {
         // Set the label to "Hello World!" after the button has been clicked on
-        button.set_label("Hello Death!");
+        button.set_label("Hello Silence!");
     });
 
     // Create a window
