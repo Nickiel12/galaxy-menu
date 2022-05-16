@@ -5,5 +5,8 @@ install `cargo install dbus-codegen`
 
 https://github.com/JingOS-team/kwin/blob/master/org.kde.KWin.xml
 
+awesome dbus implementation
+https://github.com/dodo/lua-dbus
+
 [ handy commands ] 
 qdbusviewer (qt5-tools) or d-feet
