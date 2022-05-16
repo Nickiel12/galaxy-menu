@@ -3,3 +3,7 @@
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # install this comand (default) for gtk4 deps
 sudo pacman -S gtk4 base-devel
+
+#https://github.com/diwic/dbus-rs/blob/master/dbus/examples/argument_guide.md
+install `cargo install dbus-codegen`
+https://github.com/JingOS-team/kwin/blob/master/org.kde.KWin.xml
