@@ -1,13 +1,24 @@
+use std::time::Duration;
+
+use dbus::blocking::Connection;
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Button};
+
+mod modules;
+use modules::kwin;
+
+use crate::modules::kwin::OrgKdeKWin;
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
 //https://develop.kde.org/docs/use/d-bus/introduction_to_dbus/
 //https://www.reddit.com/r/kde/comments/8h92z0/command_line_command_to_switch_virtual_desktop/
-//https://forum.kde.org/viewtopic.php?t=107875
 //https://docs.rs/dbus/latest/dbus/
 
 fn main() {
+    let conn = Connection::new_session().unwrap();
+    let proxy = conn.with_proxy("org.kde.KWin", "/KWin", Duration::from_millis(5000));
+    let res = proxy.next_desktop();
+    println!("{:?}", res);
     // Create a new application
     let app = Application::builder()
         .application_id("org.galaxymenu.constellation")
