@@ -1,34 +1,33 @@
-use std::time::Duration;
 
-use dbus::blocking::Connection;
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Button};
 
-mod modules;
-use modules::kwin;
+use zbus::Connection;
 
-use crate::modules::kwin::OrgKdeKWin;
+mod modules;
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
-//https://develop.kde.org/docs/use/d-bus/introduction_to_dbus/
-//https://www.reddit.com/r/kde/comments/8h92z0/command_line_command_to_switch_virtual_desktop/
-//https://docs.rs/dbus/latest/dbus/
 
-fn main() {
-    let conn = Connection::new_session().unwrap();
-    let proxy = conn.with_proxy("org.kde.KWin", "/KWin", Duration::from_millis(5000));
-    let res = proxy.next_desktop();
-    println!("{:?}", res);
-    // Create a new application
+#[async_std::main]
+async fn main() {
+
+    let conn = Connection::session().await.unwrap();
+
+    let proxy = modules::galaxymenuawesome::MyGreeter1Proxy::new(&conn).await.unwrap();
+    let reply = proxy.say_hello("world").await.unwrap();
+
+    dbg!(&reply);
+    println!("{}", reply);
+
     let app = Application::builder()
-        .application_id("org.galaxymenu.constellation")
-        .build();
+    .application_id("org.galaxymenu.constellation")
+    .build();
 
     // Connect to "activate" signal of `app`
     app.connect_activate(build_ui);
 
     // Run the application
-    app.run();
+    // app.run();
 }
 
 fn build_ui(app: &Application) {

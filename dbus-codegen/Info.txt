@@ -1,7 +1,8 @@
 https://github.com/diwic/dbus-rs/blob/master/dbus/examples/argument_guide.md
 https://github.com/diwic/dbus-rs/tree/master/dbus-codegen
 
-install `cargo install dbus-codegen`
+install `cargo install zbus-xmlbus`
+zbus-xmlgen --session org.galaxymenu.MyGreeter /org/galaxymenu/MyGreeter > test.rs
 
 https://github.com/JingOS-team/kwin/blob/master/org.kde.KWin.xml
 
@@ -9,4 +10,4 @@ awesome dbus implementation
 https://github.com/dodo/lua-dbus
 
 [ handy commands ] 
-qdbusviewer (qt5-tools) or d-feet
+qdbusviewer (qt5-tools) or d-feet~
