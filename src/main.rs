@@ -5,29 +5,31 @@ use gtk::{Application, ApplicationWindow, Button};
 use zbus::Connection;
 
 mod modules;
+use modules::galaxymenuawesome::MyGreeterProxy;
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
 
 #[async_std::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
-    let conn = Connection::session().await.unwrap();
+    let conn = Connection::session().await?;
 
-    let proxy = modules::galaxymenuawesome::MyGreeter1Proxy::new(&conn).await.unwrap();
-    let reply = proxy.say_hello("world").await.unwrap();
+    let proxy = MyGreeterProxy::new(&conn).await?;
+    let reply = proxy.say_hello("ding").await.unwrap();
 
-    dbg!(&reply);
     println!("{}", reply);
 
     let app = Application::builder()
     .application_id("org.galaxymenu.constellation")
     .build();
 
+
     // Connect to "activate" signal of `app`
     app.connect_activate(build_ui);
 
     // Run the application
-    // app.run();
+    app.run();
+    Ok(())
 }
 
 fn build_ui(app: &Application) {
