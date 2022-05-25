@@ -9,3 +9,5 @@ edition = "2021"
 zbus = "2.2.0"
 gtk = { version = "0.4.7", package = "gtk4" }
 async-std = { version = "1.11.0", features = ["attributes"] }
+crossbeam-channel = "0.5"
+workctl = "0.2"

@@ -2,22 +2,17 @@
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Button};
 
-use zbus::Connection;
+use crossbeam_channel;
 
 mod modules;
-use modules::galaxymenuawesome::MyGreeterProxy;
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
+
+
 
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
-    let conn = Connection::session().await?;
-
-    let proxy = MyGreeterProxy::new(&conn).await?;
-    let reply = proxy.say_hello("ding").await.unwrap();
-
-    println!("{}", reply);
 
     let app = Application::builder()
     .application_id("org.galaxymenu.constellation")
