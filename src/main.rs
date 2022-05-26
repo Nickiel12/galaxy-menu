@@ -5,6 +5,7 @@ use gtk::{Application, ApplicationWindow, Button};
 use crossbeam_channel;
 
 mod modules;
+use modules::proxys::kde;
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
 
@@ -12,7 +13,6 @@ mod modules;
 
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-
 
     let app = Application::builder()
     .application_id("org.galaxymenu.constellation")

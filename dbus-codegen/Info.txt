@@ -1,7 +1,7 @@
 https://github.com/diwic/dbus-rs/blob/master/dbus/examples/argument_guide.md
 https://github.com/diwic/dbus-rs/tree/master/dbus-codegen
 
-install `cargo install zbus-xmlbus`
+install `cargo install zbus_xmlgen`
 zbus-xmlgen --session org.galaxymenu.MyGreeter /org/galaxymenu/MyGreeter > test.rs
 
 https://github.com/JingOS-team/kwin/blob/master/org.kde.KWin.xml

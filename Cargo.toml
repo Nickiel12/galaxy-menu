@@ -11,3 +11,9 @@ gtk = { version = "0.4.7", package = "gtk4" }
 async-std = { version = "1.11.0", features = ["attributes"] }
 crossbeam-channel = "0.5"
 workctl = "0.2"
+
+
+[features]
+kde = []
+awesome = []
+gnome = []

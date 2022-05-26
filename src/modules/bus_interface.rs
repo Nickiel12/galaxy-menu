@@ -4,8 +4,7 @@ use zbus::Connection;
 use crossbeam_channel::{Receiver, Sender};
 use workctl::sync_flag;
 
-
-use super::galaxymenuawesome::MyGreeterProxy;
+use super::dbus_proxy::DbusProxy;
 use super::Messages::DBusMessage;
 
 // I need a thread that can listen to dbus signals
@@ -35,8 +34,8 @@ impl DbusInterface {
     async fn main_thread() {
         let conn = Connection::session().await.unwrap();
 
-        let proxy = MyGreeterProxy::new(&conn).await.unwrap();
-        let reply = proxy.say_hello("ding").await.unwrap();
+        //let proxy = MyGreeterProxy::new(&conn).await.unwrap();
+        //let reply = proxy.say_hello("ding").await.unwrap();
     }
 
 }
