@@ -1,14 +1,16 @@
 
+
+//#[cfg(feature = "kde")]
 use super::proxys::kde;
 
 pub struct DbusProxy {
     
 }
 
-#[cfg(feature = "kde")]
+//#[cfg(feature = "kde")]
 impl DbusProxy {
     pub fn init() {
-
+    
     }
     
     pub fn next_desktop(){
