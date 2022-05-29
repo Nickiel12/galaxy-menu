@@ -4,6 +4,7 @@ use zbus::Connection;
 use crossbeam_channel::{Sender, Receiver, bounded};
 use futures::executor::block_on;
 use std::thread::{self};
+use std::time::Duration;
 use workctl::sync_flag;
 
 use super::dbus_proxy::{DbusProxy, DbusConnection};
@@ -43,9 +44,8 @@ impl DbusHandlerReturn {
 
 }
 
-fn main_thread(stop_flag: sync_flag::SyncFlagRx, to_dbus_channel: Receiver<DBusMessage>, to_gui_channel: Sender<DBusMessage>) {
+fn main_thread(stop_flag: sync_flag::SyncFlagRx, incoming: Receiver<DBusMessage>, outgoing: Sender<DBusMessage>) {
     let conn = block_on(Connection::session()).unwrap();
-
 
     let proxy = block_on(DbusConnection::init(&conn)).unwrap();
 
@@ -53,4 +53,17 @@ fn main_thread(stop_flag: sync_flag::SyncFlagRx, to_dbus_channel: Receiver<DBusM
 
     //let proxy = MyGreeterProxy::new(&conn).await.unwrap();
     //let reply = proxy.say_hello("ding").await.unwrap();
+}
+
+async fn poll_incoming<'a>(incoming: &mut Receiver<DBusMessage>, proxy: &DbusConnection<'a>){
+    if !incoming.is_empty(){
+        match incoming.recv_timeout(Duration::from_millis(100)) {
+            Ok(message) => {match message {
+                DBusMessage::DesktopNext => proxy.next_desktop(),
+                DBusMessage::DesktopPrev => proxy.prev_desktop(),
+                DBusMessage::DesktopSet(_) => todo!(),
+            };},
+            Err(_) => panic!("Poll incoming got a timeout error"),
+        }
+    }
 }
