@@ -44,12 +44,19 @@ impl DbusHandlerReturn {
 
 }
 
-fn main_thread(stop_flag: sync_flag::SyncFlagRx, incoming: Receiver<DBusMessage>, outgoing: Sender<DBusMessage>) {
+fn main_thread(stop_flag: sync_flag::SyncFlagRx, mut incoming: Receiver<DBusMessage>, mut outgoing: Sender<DBusMessage>) {
     let conn = block_on(Connection::session()).unwrap();
 
     let proxy = block_on(DbusConnection::init(&conn)).unwrap();
 
     block_on(proxy.next_desktop());
+
+    let _handler = thread::spawn(move || {
+        while !stop_flag.get() {
+            block_on(poll_incoming(&mut incoming, &proxy));
+            
+        }
+    });
 
     //let proxy = MyGreeterProxy::new(&conn).await.unwrap();
     //let reply = proxy.say_hello("ding").await.unwrap();
@@ -66,4 +73,8 @@ async fn poll_incoming<'a>(incoming: &mut Receiver<DBusMessage>, proxy: &DbusCon
             Err(_) => panic!("Poll incoming got a timeout error"),
         }
     }
+}
+
+async fn check_signals<'a>(outgoing: &mut Sender<DBusMessage>, proxy: &DbusConnection<'a>){
+    //do something
 }
