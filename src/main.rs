@@ -1,11 +1,10 @@
-use crossbeam_channel;
-
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Button};
 
 
 mod modules;
-use modules::bus_interface::DbusHandlerReturn;
+use modules::dbus_handler::DbusHandlerReturn;
+use modules::Messages::DBusMessage;
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
 
@@ -13,9 +12,6 @@ use modules::bus_interface::DbusHandlerReturn;
 
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-
-    let dbus = DbusHandlerReturn::start();
-
 
     let app = Application::builder()
     .application_id("org.galaxymenu.constellation")
@@ -40,9 +36,14 @@ fn build_ui(app: &Application) {
         .margin_end(12)
         .build();
 
+
+    let dbus = DbusHandlerReturn::start();
+    let message_channel = dbus.send_channel.clone();
+
     // Connect to "clicked" signal of `button`
     button.connect_clicked(move |button| {
         // Set the label to "Hello World!" after the button has been clicked on
+        message_channel.send(DBusMessage::DesktopNext).unwrap();
         button.set_label("Hello Silence!");
     });
 

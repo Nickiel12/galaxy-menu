@@ -37,7 +37,7 @@ impl DbusProxy for DbusConnection<'_> {
     async fn next_desktop(&self){
         if let ProxyType::KWin(proxy) = &self.proxy {
             match proxy.next_desktop().await {
-                Ok(result) => {println!("{:?}", result)},
+                Ok(_) => (),
                 Err(err) => {println!("{:?}", err)}
             }
         } else {
@@ -48,7 +48,7 @@ impl DbusProxy for DbusConnection<'_> {
     async fn prev_desktop(&self){
         if let ProxyType::KWin(proxy) = &self.proxy {
             match proxy.previous_desktop().await {
-                Ok(result) => {println!("{:?}", result)},
+                Ok(result) => {println!("prev_desktop: {:?}", result)},
                 Err(err) => {println!("{:?}", err)}
             }
         } else {
