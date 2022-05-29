@@ -16,6 +16,7 @@ zbus = "2.2.0"
 
 
 [features]
+default = ["kde"]
 kde = []
 awesome = []
 gnome = []
