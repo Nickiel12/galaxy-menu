@@ -40,6 +40,8 @@ impl DbusProxy for DbusConnection<'_> {
                 Ok(result) => {println!("{:?}", result)},
                 Err(err) => {println!("{:?}", err)}
             }
+        } else {
+            todo!("make this throw an error");
         }
     }
 
@@ -49,6 +51,8 @@ impl DbusProxy for DbusConnection<'_> {
                 Ok(result) => {println!("{:?}", result)},
                 Err(err) => {println!("{:?}", err)}
             }
+        } else {
+            todo!("make this throw an error");
         }
     }
 
