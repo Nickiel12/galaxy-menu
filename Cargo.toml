@@ -6,11 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-zbus = "2.2.0"
-gtk = { version = "0.4.7", package = "gtk4" }
+async-trait = "0.1.5"
 async-std = { version = "1.11.0", features = ["attributes"] }
 crossbeam-channel = "0.5"
+futures = "0.3"
+gtk = { version = "0.4.7", package = "gtk4" }
 workctl = "0.2"
+zbus = "2.2.0"
 
 
 [features]

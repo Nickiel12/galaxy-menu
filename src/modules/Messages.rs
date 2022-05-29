@@ -1,7 +1,7 @@
 
 
 pub enum DBusMessage {
-    DESKTOP_NEXT,
-    DESKTOP_PREV,
-    DESKTOP_SET(u8),
+    DesktopNext,
+    DesktopPrev,
+    DesktopSet(u8),
 }
