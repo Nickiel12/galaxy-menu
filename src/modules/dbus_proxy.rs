@@ -2,15 +2,18 @@
 use zbus::{Connection, dbus_proxy};
 use async_trait::async_trait;
 
+
 enum ProxyType<'a>{
     KWin(KWinProxy<'a>),
     Awsm(MyGreeterProxy<'a>), //still a placeholder name...
     //Gnome
 }
 
+
 pub struct DbusConnection<'a> {
     proxy: ProxyType<'a>,
 }
+
 
 #[async_trait]
 pub trait DbusProxy {
@@ -18,6 +21,7 @@ pub trait DbusProxy {
     async fn next_desktop(&self) -> ();
     async fn prev_desktop(&self) -> ();
 }
+
 
 #[cfg(feature = "kde")]
 #[async_trait]
@@ -50,6 +54,7 @@ impl DbusProxy for DbusConnection<'_> {
 
 }
 
+
 #[cfg(feature = "awesome")]
 impl DbusProxy {
     pub async fn init() {
@@ -79,6 +84,7 @@ impl DbusProxy {
 
     }
 }
+
 
 #[dbus_proxy(interface = "org.kde.KWin",
             default_service = "org.kde.KWin",
@@ -155,7 +161,6 @@ trait KWin {
 }
 
 
-//#[cfg(feature = "awesome")]
 #[dbus_proxy(
     interface = "org.galaxymenu.MyGreeter",
     default_service = "org.galaxymenu.MyGreeter",
