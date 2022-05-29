@@ -1,42 +1,56 @@
 
 use zbus::Connection;
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::{Sender, Receiver, bounded};
+use futures::executor::block_on;
+use std::thread::{self};
 use workctl::sync_flag;
 
-
-use super::galaxymenuawesome::MyGreeterProxy;
+use super::dbus_proxy::{DbusProxy, DbusConnection};
 use super::Messages::DBusMessage;
 
 // I need a thread that can listen to dbus signals
 // and also call dbus methods
 
 // it needs an input channel and an output channel
-pub struct DbusInterface {
+pub struct DbusHandlerReturn {
 
-    stop_thread: sync_flag::SyncFlagRx,
-    incoming_signals: Receiver<DBusMessage>,
-    gui_update_channel: Sender<DBusMessage>,
+    stop_signal: sync_flag::SyncFlagTx,
+    send_channel: crossbeam_channel::Sender<DBusMessage>,
+    receive_channel: crossbeam_channel::Receiver<DBusMessage>,
+    thread_handle: thread::JoinHandle<()>,
 
 }
 
-impl DbusInterface {
-    pub fn start(stop_flag: sync_flag::SyncFlagRx, to_dbus_channel: Receiver<DBusMessage>, to_gui_channel: Sender<DBusMessage>) -> Self {
-        let interface: DbusInterface = 
-        DbusInterface {
-            stop_thread: stop_flag,
-            incoming_signals: to_dbus_channel,
-            gui_update_channel: to_gui_channel,
+impl DbusHandlerReturn {
+    pub fn start() -> Self {
+        
+        let (stopflag_tx, stopflag_rx) = sync_flag::new_syncflag(false);
+        let (to_dbus_thread_tx, to_dbus_thread_rx) = bounded::<DBusMessage>(20);
+        let (from_dbus_thread_tx, from_dbus_thread_rx) = bounded::<DBusMessage>(20);
+
+        let thread = thread::spawn(move || {main_thread(stopflag_rx, to_dbus_thread_rx, from_dbus_thread_tx);});
+        
+        let interface = DbusHandlerReturn {
+            stop_signal: stopflag_tx,
+            send_channel: to_dbus_thread_tx,
+            receive_channel: from_dbus_thread_rx,
+            thread_handle: thread,
         };
 
         return interface;
     }
 
-    async fn main_thread() {
-        let conn = Connection::session().await.unwrap();
+}
 
-        let proxy = MyGreeterProxy::new(&conn).await.unwrap();
-        let reply = proxy.say_hello("ding").await.unwrap();
-    }
+fn main_thread(stop_flag: sync_flag::SyncFlagRx, to_dbus_channel: Receiver<DBusMessage>, to_gui_channel: Sender<DBusMessage>) {
+    let conn = block_on(Connection::session()).unwrap();
 
+
+    let proxy = block_on(DbusConnection::init(&conn)).unwrap();
+
+    block_on(proxy.next_desktop());
+
+    //let proxy = MyGreeterProxy::new(&conn).await.unwrap();
+    //let reply = proxy.say_hello("ding").await.unwrap();
 }

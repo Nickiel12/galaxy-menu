@@ -1,10 +1,11 @@
+use crossbeam_channel;
 
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Button};
 
-use crossbeam_channel;
 
 mod modules;
+use modules::bus_interface::DbusHandlerReturn;
 
 //https://gtk-rs.org/gtk4-rs/git/book/widgets.html
 
@@ -12,6 +13,8 @@ mod modules;
 
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+    let dbus = DbusHandlerReturn::start();
 
 
     let app = Application::builder()
