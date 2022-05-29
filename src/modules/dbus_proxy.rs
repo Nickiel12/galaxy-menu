@@ -2,8 +2,14 @@
 use zbus::{Connection, dbus_proxy};
 use async_trait::async_trait;
 
+enum ProxyType<'a>{
+    KWin(KWinProxy<'a>),
+    Awsm(MyGreeterProxy<'a>), //still a placeholder name...
+    //Gnome
+}
+
 pub struct DbusConnection<'a> {
-    proxy: KWinProxy<'a>,
+    proxy: ProxyType<'a>,
 }
 
 #[async_trait]
@@ -13,28 +19,32 @@ pub trait DbusProxy {
     async fn prev_desktop(&self) -> ();
 }
 
-//#[cfg(feature = "kde")]
+#[cfg(feature = "kde")]
 #[async_trait]
 impl DbusProxy for DbusConnection<'_> {
     async fn init<'a>(connection: &Connection) -> Result<DbusConnection<'a>, Box<dyn std::error::Error>> {
         let proxy = KWinProxy::new(connection).await?;
 
         return Ok(DbusConnection {
-            proxy,
+            proxy: ProxyType::KWin(proxy),
         })
     }
     
     async fn next_desktop(&self){
-        match self.proxy.next_desktop().await {
-            Ok(result) => {println!("{:?}", result)},
-            Err(err) => {println!("{:?}", err)}
+        if let ProxyType::KWin(proxy) = &self.proxy {
+            match proxy.next_desktop().await {
+                Ok(result) => {println!("{:?}", result)},
+                Err(err) => {println!("{:?}", err)}
+            }
         }
     }
 
     async fn prev_desktop(&self){
-        match self.proxy.previous_desktop().await {
-            Ok(result) => {println!("{:?}", result)},
-            Err(err) => {println!("{:?}", err)}
+        if let ProxyType::KWin(proxy) = &self.proxy {
+            match proxy.previous_desktop().await {
+                Ok(result) => {println!("{:?}", result)},
+                Err(err) => {println!("{:?}", err)}
+            }
         }
     }
 
@@ -70,7 +80,6 @@ impl DbusProxy {
     }
 }
 
-//#[cfg(feature = "kde")]
 #[dbus_proxy(interface = "org.kde.KWin",
             default_service = "org.kde.KWin",
             default_path = "/KWin")]
@@ -146,7 +155,7 @@ trait KWin {
 }
 
 
-#[cfg(feature = "awesome")]
+//#[cfg(feature = "awesome")]
 #[dbus_proxy(
     interface = "org.galaxymenu.MyGreeter",
     default_service = "org.galaxymenu.MyGreeter",
