@@ -1,24 +1,38 @@
+use gtk::glib;
 use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow};
 
-fn main() {
-    let app = Application::builder()
-        .application_id("org.example.HelloWorld")
-        .build();
+mod modules;
+use modules::dbus_handler::DbusHandlerReturn;
+use modules::Messages::DBusMessage;
 
-    app.connect_activate(|app| {
-        // We create the main window.
-        let win = ApplicationWindow::builder()
-            .application(app)
-            .default_width(320)
-            .default_height(200)
-            .title("Hello, World!")
-            .build();
 
-        // Don't forget to make all widgets visible.
-        win.stick();
-        win.show_all();
+fn build_ui(application: &gtk::Application) {
+    let glade_src = include_str!("warp_gate.glade");
+    let builder = gtk::Builder::new();
+    builder.add_from_string(glade_src).unwrap();
+
+    let window: gtk::ApplicationWindow = builder.object("window").unwrap();
+    window.set_application(Some(application));
+
+
+    let dbus = DbusHandlerReturn::start();
+    let message_channel = dbus.send_channel.clone();
+
+    let button: gtk::Button = builder.object("button").unwrap();
+
+    button.connect_clicked(move |_| {
+        message_channel.send(DBusMessage::DesktopNext).unwrap();
+        println!("hello world");
     });
 
-    app.run();
+    window.stick();
+    window.show_all();
+}
+
+fn main() {
+    let application = gtk::Application::new(Some("com.github.ElnuDev.runic"), Default::default());
+
+    application.connect_activate(build_ui);
+
+    application.run();
 }
