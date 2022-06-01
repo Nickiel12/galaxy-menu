@@ -1,60 +1,24 @@
 use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow, Button};
+use gtk::{Application, ApplicationWindow};
 
-
-mod modules;
-use modules::dbus_handler::DbusHandlerReturn;
-use modules::Messages::DBusMessage;
-
-//https://gtk-rs.org/gtk4-rs/git/book/widgets.html
-
-
-
-#[async_std::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-
+fn main() {
     let app = Application::builder()
-    .application_id("org.galaxymenu.constellation")
-    .build();
-
-
-    // Connect to "activate" signal of `app`
-    app.connect_activate(build_ui);
-
-    // Run the application
-    app.run();
-    Ok(())
-}
-
-fn build_ui(app: &Application) {
-    // Create a button with label and margins
-    let button = Button::builder()
-        .label("Press me!")
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
+        .application_id("org.example.HelloWorld")
         .build();
 
+    app.connect_activate(|app| {
+        // We create the main window.
+        let win = ApplicationWindow::builder()
+            .application(app)
+            .default_width(320)
+            .default_height(200)
+            .title("Hello, World!")
+            .build();
 
-    let dbus = DbusHandlerReturn::start();
-    let message_channel = dbus.send_channel.clone();
-
-    // Connect to "clicked" signal of `button`
-    button.connect_clicked(move |button| {
-        // Set the label to "Hello World!" after the button has been clicked on
-        message_channel.send(DBusMessage::DesktopNext).unwrap();
-        button.set_label("Hello Silence!");
+        // Don't forget to make all widgets visible.
+        win.stick();
+        win.show_all();
     });
 
-    // Create a window
-    let window = ApplicationWindow::builder()
-        .application(app)
-        .title("My GTK App")
-        .child(&button)
-        .build();
-
-    window.set_decorated(false);
-    // Present window
-    window.present();
+    app.run();
 }
