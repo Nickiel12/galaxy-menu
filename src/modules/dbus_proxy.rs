@@ -60,16 +60,21 @@ impl DbusProxy for DbusConnection<'_> {
 
 
 #[cfg(feature = "awesome")]
-impl DbusProxy {
-    pub async fn init() {
+#[async_trait]
+impl DbusProxy for DbusConnection<'_> {
+    async fn init<'a>(connection: &Connection) -> Result<DbusConnection<'a>, Box<dyn std::error::Error>> {
+        let proxy = MyGreeterProxy::new(connection).await?;
 
+        return Ok(DbusConnection {
+            proxy: ProxyType::Awsm(proxy),
+        })
     }
     
-    pub async fn next_desktop(){
+    async fn next_desktop(&self){
 
     }
 
-    pub async fn prev_desktop(){
+    async fn prev_desktop(&self){
 
     }
 }
